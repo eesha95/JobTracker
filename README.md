@@ -2,7 +2,11 @@
 
 A full-stack job application tracker built with **React.js, FastAPI, and SQLite**.
 
-JobTracker allows users to keep track of the jobs they have applied for, including the company, position, location, salary, application status, application date, and notes.
+JobTracker allows users to keep track of the jobs they have applied for, including the company, position, location, salary, application status, application date, and notes. 
+
+## Live Demo
+
+🌐 https://jobtracker-4k47.onrender.com
 
 ## 🚀 Features
 
