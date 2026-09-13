@@ -117,22 +117,24 @@ function Layout({ children }) {
 
 function Dashboard({ jobs }) {
   const stats = [
-    ["Total Applications", jobs.length, ClipboardList, "neutral"],
-
+    [
+      "Total Applications",
+      jobs.length,
+      ClipboardList,
+      "neutral",
+    ],
     [
       "Applied",
       jobs.filter((j) => j.status === "Applied").length,
       TrendingUp,
       "blue",
     ],
-
     [
       "Interviews",
       jobs.filter((j) => j.status === "Interview").length,
       Users,
       "orange",
     ],
-
     [
       "Offers",
       jobs.filter((j) => j.status === "Offer").length,
@@ -155,25 +157,35 @@ function Dashboard({ jobs }) {
             </p>
           </div>
 
-          <Link className="primary-btn" to="/jobs/add">
+          <Link
+            className="primary-btn"
+            to="/jobs/add"
+          >
             <Plus size={18} />
             Add application
           </Link>
         </div>
 
         <div className="stats-grid">
-          {stats.map(([label, value, Icon, kind]) => (
-            <div className="stat-card" key={label}>
-              <div className={`stat-icon ${kind}`}>
-                <Icon size={20} />
-              </div>
+          {stats.map(
+            ([label, value, Icon, kind]) => (
+              <div
+                className="stat-card"
+                key={label}
+              >
+                <div
+                  className={`stat-icon ${kind}`}
+                >
+                  <Icon size={20} />
+                </div>
 
-              <div>
-                <p>{label}</p>
-                <strong>{value}</strong>
+                <div>
+                  <p>{label}</p>
+                  <strong>{value}</strong>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
 
         <div className="content-grid">
@@ -187,7 +199,10 @@ function Dashboard({ jobs }) {
                 </p>
               </div>
 
-              <Link to="/jobs" className="text-link">
+              <Link
+                to="/jobs"
+                className="text-link"
+              >
                 View all
                 <ChevronRight size={16} />
               </Link>
@@ -220,16 +235,30 @@ function Dashboard({ jobs }) {
                       <td>{j.position}</td>
 
                       <td>
-                        <Status status={j.status} />
+                        <Status
+                          status={j.status}
+                        />
                       </td>
 
                       <td>
                         {formatDate(
-                          j.applied_date || j.appliedDate
+                          j.applied_date ||
+                            j.appliedDate
                         )}
                       </td>
                     </tr>
                   ))}
+
+                  {jobs.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="empty"
+                      >
+                        No applications yet.
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -250,7 +279,9 @@ function Dashboard({ jobs }) {
               <div className="tip-number">1</div>
 
               <div>
-                <b>Follow up after interviews</b>
+                <b>
+                  Follow up after interviews
+                </b>
 
                 <p>
                   Send a short thank-you message within 24 hours.
@@ -262,7 +293,9 @@ function Dashboard({ jobs }) {
               <div className="tip-number">2</div>
 
               <div>
-                <b>Track every application</b>
+                <b>
+                  Track every application
+                </b>
 
                 <p>
                   Keep notes so you never lose context.
@@ -274,7 +307,9 @@ function Dashboard({ jobs }) {
               <div className="tip-number">3</div>
 
               <div>
-                <b>Apply consistently</b>
+                <b>
+                  Apply consistently
+                </b>
 
                 <p>
                   Set a weekly application target and stick to it.
@@ -294,7 +329,11 @@ function Dashboard({ jobs }) {
 
 function Status({ status }) {
   return (
-    <span className={`status ${status?.toLowerCase() || "applied"}`}>
+    <span
+      className={`status ${
+        status?.toLowerCase() || "applied"
+      }`}
+    >
       {status || "Applied"}
     </span>
   );
@@ -309,7 +348,9 @@ function formatDate(date) {
     return "—";
   }
 
-  return new Date(date + "T00:00:00").toLocaleDateString(
+  return new Date(
+    date + "T00:00:00"
+  ).toLocaleDateString(
     "en-IN",
     {
       day: "2-digit",
@@ -329,15 +370,17 @@ function Jobs({ jobs, setJobs }) {
 
   const filtered = jobs.filter((j) => {
     const statusMatch =
-      filter === "All" || j.status === filter;
+      filter === "All" ||
+      j.status === filter;
 
     const text = `${j.company || ""} ${
       j.position || ""
     } ${j.location || ""}`;
 
-    const searchMatch = text
-      .toLowerCase()
-      .includes(query.toLowerCase());
+    const searchMatch =
+      text
+        .toLowerCase()
+        .includes(query.toLowerCase());
 
     return statusMatch && searchMatch;
   });
@@ -352,21 +395,33 @@ function Jobs({ jobs, setJobs }) {
       );
 
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorText =
+          await response.text();
 
         console.error(
           "Delete backend error:",
           errorText
         );
 
-        throw new Error("Failed to delete job");
+        throw new Error(
+          `Failed to delete job: ${response.status}`
+        );
       }
 
-      setJobs(jobs.filter((j) => j.id !== id));
+      setJobs((currentJobs) =>
+        currentJobs.filter(
+          (j) => j.id !== id
+        )
+      );
     } catch (error) {
-      console.error("Error deleting job:", error);
+      console.error(
+        "Error deleting job:",
+        error
+      );
 
-      alert("Failed to delete application.");
+      alert(
+        "Failed to delete application."
+      );
     }
   };
 
@@ -375,7 +430,9 @@ function Jobs({ jobs, setJobs }) {
       <section className="page">
         <div className="page-head">
           <div>
-            <p className="eyebrow">APPLICATIONS</p>
+            <p className="eyebrow">
+              APPLICATIONS
+            </p>
 
             <h1>Job applications</h1>
 
@@ -450,13 +507,19 @@ function Jobs({ jobs, setJobs }) {
 
                     <td>{j.position}</td>
 
-                    <td>{j.location || "—"}</td>
-
                     <td>
-                      <Status status={j.status} />
+                      {j.location || "—"}
                     </td>
 
-                    <td>{j.salary || "—"}</td>
+                    <td>
+                      <Status
+                        status={j.status}
+                      />
+                    </td>
+
+                    <td>
+                      {j.salary || "—"}
+                    </td>
 
                     <td>
                       {formatDate(
@@ -511,53 +574,80 @@ function AddJob({ jobs, setJobs }) {
     location: "",
     status: "Applied",
     salary: "",
-    appliedDate: new Date()
-      .toISOString()
-      .slice(0, 10),
+    appliedDate:
+      new Date()
+        .toISOString()
+        .slice(0, 10),
     jobUrl: "",
     notes: "",
   });
 
-  const [saving, setSaving] = useState(false);
+  const [saving, setSaving] =
+    useState(false);
 
   const change = (e) => {
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.value,
     });
   };
 
   const submit = async (e) => {
     e.preventDefault();
 
+    if (!form.company.trim()) {
+      alert("Please enter the company name.");
+      return;
+    }
+
+    if (!form.position.trim()) {
+      alert("Please enter the position.");
+      return;
+    }
+
     setSaving(true);
 
     try {
-      console.log("Sending job to:", `${API_URL}/jobs`);
+      const url = `${API_URL}/jobs`;
 
-      const response = await fetch(
-        `${API_URL}/jobs`,
-        {
+      console.log(
+        "POST request:",
+        url
+      );
+
+      const payload = {
+        company: form.company.trim(),
+        position: form.position.trim(),
+        status: form.status,
+        location: form.location.trim(),
+        salary: form.salary.trim(),
+        applied_date: form.appliedDate,
+        job_url: form.jobUrl.trim(),
+        notes: form.notes.trim(),
+      };
+
+      console.log(
+        "Sending data:",
+        payload
+      );
+
+      const response =
+        await fetch(url, {
           method: "POST",
 
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type":
+              "application/json",
           },
 
-          body: JSON.stringify({
-            company: form.company,
-            position: form.position,
-            status: form.status,
-            location: form.location,
-            salary: form.salary,
-            applied_date: form.appliedDate,
-            job_url: form.jobUrl,
-            notes: form.notes,
-          }),
-        }
-      );
+          body: JSON.stringify(
+            payload
+          ),
+        });
 
-      const responseText = await response.text();
+      const responseText =
+        await response.text();
 
       console.log(
         "Backend response:",
@@ -574,25 +664,37 @@ function AddJob({ jobs, setJobs }) {
       let newJob;
 
       try {
-        newJob = JSON.parse(responseText);
-      } catch {
+        newJob =
+          responseText
+            ? JSON.parse(responseText)
+            : null;
+      } catch (parseError) {
+        console.error(
+          "JSON parse error:",
+          parseError
+        );
+
+        newJob = null;
+      }
+
+      if (!newJob) {
         newJob = {
-          company: form.company,
-          position: form.position,
-          status: form.status,
-          location: form.location,
-          salary: form.salary,
-          applied_date: form.appliedDate,
-          job_url: form.jobUrl,
-          notes: form.notes,
+          id: Date.now(),
+          ...payload,
         };
       }
 
-      setJobs([...jobs, newJob]);
+      setJobs((currentJobs) => [
+        ...currentJobs,
+        newJob,
+      ]);
 
-      alert("Application saved successfully!");
+      alert(
+        "Application saved successfully! 🎉"
+      );
 
       nav("/jobs");
+
     } catch (error) {
       console.error(
         "Error adding job:",
@@ -602,6 +704,7 @@ function AddJob({ jobs, setJobs }) {
       alert(
         `Failed to save application.\n\n${error.message}`
       );
+
     } finally {
       setSaving(false);
     }
@@ -616,7 +719,9 @@ function AddJob({ jobs, setJobs }) {
               NEW APPLICATION
             </p>
 
-            <h1>Add application</h1>
+            <h1>
+              Add application
+            </h1>
 
             <p className="muted">
               Save the details of a new opportunity.
@@ -671,10 +776,21 @@ function AddJob({ jobs, setJobs }) {
                 value={form.status}
                 onChange={change}
               >
-                <option>Applied</option>
-                <option>Interview</option>
-                <option>Offer</option>
-                <option>Rejected</option>
+                <option>
+                  Applied
+                </option>
+
+                <option>
+                  Interview
+                </option>
+
+                <option>
+                  Offer
+                </option>
+
+                <option>
+                  Rejected
+                </option>
               </select>
             </div>
 
@@ -740,7 +856,6 @@ function Field({ label, ...props }) {
   return (
     <div className="field">
       <label>{label}</label>
-
       <input {...props} />
     </div>
   );
@@ -829,7 +944,9 @@ function Register() {
           <span>JobTrack</span>
         </div>
 
-        <h1>Create your account</h1>
+        <h1>
+          Create your account
+        </h1>
 
         <p className="muted">
           Start tracking your applications today.
@@ -952,15 +1069,20 @@ function JobDetails({ jobs }) {
           </div>
 
           <h1>
-            {job?.position || "Application"}
+            {job?.position ||
+              "Application"}
           </h1>
 
           <h2>
-            {job?.company || "Unknown company"}
+            {job?.company ||
+              "Unknown company"}
           </h2>
 
           <Status
-            status={job?.status || "Applied"}
+            status={
+              job?.status ||
+              "Applied"
+            }
           />
 
           <div className="detail-grid">
@@ -968,7 +1090,8 @@ function JobDetails({ jobs }) {
               <span>Location</span>
 
               <b>
-                {job?.location || "—"}
+                {job?.location ||
+                  "—"}
               </b>
             </div>
 
@@ -976,7 +1099,8 @@ function JobDetails({ jobs }) {
               <span>Salary</span>
 
               <b>
-                {job?.salary || "—"}
+                {job?.salary ||
+                  "—"}
               </b>
             </div>
 
@@ -1007,19 +1131,22 @@ function JobDetails({ jobs }) {
 // =====================================================
 
 export default function App() {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] =
+    useState([]);
 
   useEffect(() => {
     const loadJobs = async () => {
       try {
+        const url =
+          `${API_URL}/jobs`;
+
         console.log(
           "Fetching jobs from:",
-          `${API_URL}/jobs`
+          url
         );
 
-        const response = await fetch(
-          `${API_URL}/jobs`
-        );
+        const response =
+          await fetch(url);
 
         const responseText =
           await response.text();
@@ -1042,8 +1169,11 @@ export default function App() {
             : [];
 
         setJobs(
-          Array.isArray(data) ? data : []
+          Array.isArray(data)
+            ? data
+            : []
         );
+
       } catch (error) {
         console.error(
           "Error fetching jobs:",
@@ -1075,7 +1205,9 @@ export default function App() {
       <Route
         path="/dashboard"
         element={
-          <Dashboard jobs={jobs} />
+          <Dashboard
+            jobs={jobs}
+          />
         }
       />
 
@@ -1107,7 +1239,9 @@ export default function App() {
       <Route
         path="/jobs/:id"
         element={
-          <JobDetails jobs={jobs} />
+          <JobDetails
+            jobs={jobs}
+          />
         }
       />
     </Routes>
