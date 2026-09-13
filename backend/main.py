@@ -11,29 +11,28 @@ from models import Base, Job
 Base.metadata.create_all(bind=engine)
 
 
-app = FastAPI(
-    title="Job Tracker API",
-    description="Backend API for Job Tracker",
-    version="1.0.0"
-)
+app = FastAPI()
 
 
-# --------------------------------------------------
+# -------------------------
 # CORS
-# --------------------------------------------------
+# -------------------------
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-# --------------------------------------------------
-# DATABASE DEPENDENCY
-# --------------------------------------------------
+# -------------------------
+# Database Dependency
+# -------------------------
 
 def get_db():
     db = SessionLocal()
@@ -44,15 +43,14 @@ def get_db():
         db.close()
 
 
-# --------------------------------------------------
-# PYDANTIC SCHEMAS
-# --------------------------------------------------
+# -------------------------
+# Pydantic Schemas
+# -------------------------
 
 class JobCreate(BaseModel):
     company: str
     position: str
     status: str
-
     location: str | None = None
     salary: str | None = None
     applied_date: str | None = None
@@ -64,7 +62,6 @@ class JobUpdate(BaseModel):
     company: str | None = None
     position: str | None = None
     status: str | None = None
-
     location: str | None = None
     salary: str | None = None
     applied_date: str | None = None
@@ -72,18 +69,18 @@ class JobUpdate(BaseModel):
     notes: str | None = None
 
 
-# --------------------------------------------------
+# -------------------------
 # HOME
-# --------------------------------------------------
+# -------------------------
 
 @app.get("/")
 def home():
     return "Job Tracker API is running"
 
 
-# --------------------------------------------------
+# -------------------------
 # GET ALL JOBS
-# --------------------------------------------------
+# -------------------------
 
 @app.get("/jobs")
 def get_jobs(
@@ -103,9 +100,9 @@ def get_jobs(
     return query.all()
 
 
-# --------------------------------------------------
+# -------------------------
 # GET ONE JOB
-# --------------------------------------------------
+# -------------------------
 
 @app.get("/jobs/{job_id}")
 def get_job(
@@ -124,9 +121,9 @@ def get_job(
     return job
 
 
-# --------------------------------------------------
+# -------------------------
 # CREATE JOB
-# --------------------------------------------------
+# -------------------------
 
 @app.post("/jobs")
 def create_job(
@@ -152,9 +149,9 @@ def create_job(
     return new_job
 
 
-# --------------------------------------------------
+# -------------------------
 # UPDATE JOB
-# --------------------------------------------------
+# -------------------------
 
 @app.put("/jobs/{job_id}")
 def update_job(
@@ -171,9 +168,7 @@ def update_job(
             detail="Job not found"
         )
 
-    update_data = job_data.model_dump(
-        exclude_unset=True
-    )
+    update_data = job_data.model_dump(exclude_unset=True)
 
     for key, value in update_data.items():
         setattr(job, key, value)
@@ -184,9 +179,9 @@ def update_job(
     return job
 
 
-# --------------------------------------------------
+# -------------------------
 # DELETE JOB
-# --------------------------------------------------
+# -------------------------
 
 @app.delete("/jobs/{job_id}")
 def delete_job(
